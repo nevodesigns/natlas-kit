@@ -39,8 +39,14 @@ def run_case(client, case: Dict[str, Any]) -> Dict[str, Any]:
             got = extract(client, case["input"], case["schema"])
             ok, reason = True, "ok"
             for k, v in case.get("expect", {}).items():
-                if str(got.get(k)).strip().lower() != str(v).strip().lower():
-                    ok, reason = False, f"field '{k}': got {got.get(k)!r}, want {v!r}"
+                got_v = got.get(k)
+                try:                       # numbers compare numerically (6000.0 == 6000)
+                    if float(got_v) == float(v):
+                        continue
+                except (TypeError, ValueError):
+                    pass
+                if str(got_v).strip().lower() != str(v).strip().lower():
+                    ok, reason = False, f"field '{k}': got {got_v!r}, want {v!r}"
                     break
             got_repr = json.dumps(got, ensure_ascii=False)
         else:
