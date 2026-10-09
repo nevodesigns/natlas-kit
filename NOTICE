@@ -1,0 +1,27 @@
+natlas-kit
+==========
+
+natlas-kit is an independent, community-built developer toolkit (SDK + CLI) for the
+N-ATLaS models. It is NOT an official product of, and is NOT affiliated with or endorsed
+by, NCAIR, NITDA or Awarri Technologies.
+
+natlas-kit is a client library: it sends requests to an N-ATLaS endpoint that you host.
+It does not contain, redistribute or modify the N-ATLaS model weights, so it is not a
+"derivative" of the model. The toolkit's own code is licensed under the MIT License (see
+LICENSE).
+
+The N-ATLaS models are the work of:
+  - Awarri Technologies (model developer), and
+  - the National Centre for Artificial Intelligence and Robotics (NCAIR), an agency of
+    NITDA under the Federal Ministry of Communications, Innovation and Digital Economy.
+
+Model: https://huggingface.co/NCAIR1/N-ATLaS
+
+The N-ATLaS models are released under their own "Open-Source Research and Innovation
+License," which (among other terms) limits use to organizations or projects with no more
+than 1,000 active end-users in a rolling 30-day period without a separate commercial
+agreement, requires attribution to Awarri Technologies and the Federal Ministry of
+Communications, Innovation and Digital Economy, and prohibits certain uses (surveillance,
+discriminatory profiling, disinformation, military deployment). Anyone deploying N-ATLaS
+through natlas-kit is responsible for complying with that license. Read it on the model
+page before deploying.

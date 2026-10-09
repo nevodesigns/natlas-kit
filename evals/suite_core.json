@@ -1,0 +1,55 @@
+[
+  {
+    "name": "translate_en_to_yoruba",
+    "kind": "chat",
+    "input": "Translate 'good morning' into Yoruba. Reply with only the translation.",
+    "any_of": ["kaaro", "ku aaro", "àárọ"]
+  },
+  {
+    "name": "translate_en_to_hausa",
+    "kind": "chat",
+    "input": "Translate 'thank you' into Hausa. Reply with only the translation.",
+    "any_of": ["na gode", "nagode"]
+  },
+  {
+    "name": "detect_language_hausa",
+    "kind": "chat",
+    "input": "What language is this: 'Ina kwana'. Reply with one word.",
+    "contains": ["Hausa"]
+  },
+  {
+    "name": "detect_language_igbo",
+    "kind": "chat",
+    "input": "What language is this: 'Kedu ka i mere'. Reply with one word.",
+    "contains": ["Igbo"]
+  },
+  {
+    "name": "classify_expense",
+    "kind": "chat",
+    "input": "Is this shop income or expense? 'I bought fuel for the generator.' Reply with one word: income or expense.",
+    "contains": ["expense"]
+  },
+  {
+    "name": "extract_sale_pidgin",
+    "kind": "extract",
+    "input": "I sell two brake pads for fifteen thousand give Musa, e pay half, e still owe me the rest.",
+    "schema": {
+      "item": {"type": "string", "required": true},
+      "quantity": {"type": "integer"},
+      "amount": {"type": "number", "required": true, "description": "total price in naira"},
+      "buyer": {"type": "string"},
+      "on_credit": {"type": "boolean", "default": false}
+    },
+    "expect": {"on_credit": true}
+  },
+  {
+    "name": "extract_expense",
+    "kind": "extract",
+    "input": "Paid 6k for fuel to run the generator today.",
+    "schema": {
+      "category": {"type": "string", "required": true},
+      "amount": {"type": "number", "required": true}
+    },
+    "expect": {"amount": 6000}
+  }
+]

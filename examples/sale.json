@@ -1,0 +1,9 @@
+{
+  "kind":       {"type": "string",  "required": true,  "description": "income or expense"},
+  "item":       {"type": "string",  "required": true,  "description": "what was sold or bought"},
+  "quantity":   {"type": "integer", "default": 1},
+  "amount":     {"type": "number",  "required": true,  "description": "total value in naira"},
+  "amount_paid":{"type": "number",  "description": "cash received now"},
+  "counterparty":{"type": "string", "description": "customer or supplier name"},
+  "on_credit":  {"type": "boolean", "default": false}
+}

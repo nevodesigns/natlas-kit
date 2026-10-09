@@ -1,0 +1,17 @@
+{
+  "name": "natlas-kit",
+  "version": "0.1.0",
+  "description": "Developer toolkit for NCAIR's N-ATLaS models — TypeScript/JavaScript client (Node + browser).",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": { ".": { "import": "./dist/index.js", "types": "./dist/index.d.ts" } },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "node --test test/*.test.mjs"
+  },
+  "keywords": ["n-atlas", "natlas", "nigeria", "llm", "yoruba", "hausa", "igbo", "pidgin", "ncair", "nitda"],
+  "license": "MIT",
+  "devDependencies": { "typescript": "5.7.3" }
+}
