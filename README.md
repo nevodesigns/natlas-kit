@@ -2,6 +2,8 @@
 
 **A developer toolkit that makes [N-ATLaS](https://huggingface.co/NCAIR1/N-ATLaS) easy to build with.**
 
+🌐 **Website:** https://nevodesigns.github.io/natlas-kit/
+
 N-ATLaS (the Nigerian Atlas for Languages and AI at Scale) is NCAIR's open LLM for
 English, Hausa, Igbo and Yoruba, plus a set of speech-to-text models. It is powerful,
 but building *applications* on top of it is harder than it should be:

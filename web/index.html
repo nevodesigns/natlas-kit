@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>natlas-kit — the developer toolkit for N-ATLaS</title>
+<meta name="description" content="An open-source Python + TypeScript toolkit that makes NCAIR's N-ATLaS language and speech models easy to build with: unified backends, structured JSON output, Nigerian-language tasks, speech-to-text and an eval harness." />
+<link rel="icon" href="natlas-kit-logo.png" />
+<meta property="og:title" content="natlas-kit — developer toolkit for N-ATLaS" />
+<meta property="og:description" content="Make N-ATLaS easy to build with. Python + TypeScript, structured output, NG-language tasks, ASR and an eval harness." />
+<meta property="og:image" content="natlas-kit-logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --deep:#06241D; --deep2:#0A362B; --teal:#0C5C4C; --teal2:#12795F;
+    --cream:#F6F4EB; --paper:#FFFFFF; --ink:#15201C; --inkSoft:#5A6A61;
+    --mint:#9CCFBE; --green:#35D07F; --amber:#E3A63C; --line:#E7E3D6;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased;line-height:1.55}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+  .btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:16px;padding:13px 22px;border-radius:12px;border:1.5px solid transparent;transition:transform .12s ease,background .15s ease}
+  .btn:hover{transform:translateY(-1px)}
+  .btn-primary{background:var(--green);color:#05231A}
+  .btn-ghost{background:transparent;border-color:rgba(255,255,255,.25);color:#EAF3EF}
+  .btn-dark{background:var(--teal);color:#fff}
+  .eyebrow{font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--teal2)}
+
+  /* nav */
+  header{position:sticky;top:0;z-index:20;background:rgba(6,36,29,.86);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.07)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .brand{display:flex;align-items:center;gap:11px;color:#EAF3EF;font-weight:700}
+  .brand img{width:34px;height:34px}
+  .brand span{font-family:"JetBrains Mono",monospace;font-size:19px}
+  .nav-links{display:flex;align-items:center;gap:26px;color:#BcdCd0}
+  .nav-links a{color:#AFC9BE;font-weight:500;font-size:15px}
+  .nav-links a:hover{color:#fff}
+  @media(max-width:720px){.nav-links a:not(.btn){display:none}}
+
+  /* hero */
+  .hero{background:radial-gradient(120% 120% at 80% -10%,#0E4034 0%,var(--deep2)45%,var(--deep) 100%);color:#EAF3EF;position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.06)}
+  .hero::after{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 58px);pointer-events:none}
+  .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:74px 24px 86px}
+  .hero h1{font-size:60px;line-height:1.02;margin:16px 0 14px;letter-spacing:-1.5px;font-weight:800}
+  .hero h1 .kit{font-family:"JetBrains Mono",monospace}
+  .hero p.lead{font-size:20px;color:#C7DCD3;max-width:560px;margin:0 0 26px}
+  .hero .cta{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-art{display:flex;justify-content:center}
+  .hero-art img{width:min(340px,80%);filter:drop-shadow(0 30px 60px rgba(0,0,0,.45))}
+  @media(max-width:860px){.hero .wrap{grid-template-columns:1fr;text-align:center;padding:54px 24px 64px}.hero h1{font-size:44px}.hero p.lead{margin-left:auto;margin-right:auto}.hero .cta{justify-content:center}.hero-art{order:-1}}
+
+  /* terminal */
+  .term{margin-top:30px;background:#07140F;border:1px solid rgba(255,255,255,.1);border-radius:14px;overflow:hidden;text-align:left;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+  .term .bar{height:40px;background:#0C2219;display:flex;align-items:center;gap:8px;padding:0 15px;border-bottom:1px solid rgba(255,255,255,.06)}
+  .dot{width:11px;height:11px;border-radius:50%}
+  .term pre{margin:0;padding:18px 20px;font-family:"JetBrains Mono",monospace;font-size:14.5px;line-height:1.7;color:#D7E6DF;overflow-x:auto}
+  .term .c-cmd{color:#4FD1A8}.term .c-str{color:#9CD9B6}.term .c-out{color:#8FB3A6}.term .c-key{color:#7FB8E8}
+
+  /* sections */
+  section{padding:84px 0}
+  .section-head{max-width:720px}
+  .section-head h2{font-size:38px;line-height:1.1;margin:10px 0 0;letter-spacing:-.5px}
+  .muted{color:var(--inkSoft)}
+  .grid{display:grid;gap:18px}
+  .cols-4{grid-template-columns:repeat(4,1fr)}
+  .cols-3{grid-template-columns:repeat(3,1fr)}
+  .cols-2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:900px){.cols-4{grid-template-columns:repeat(2,1fr)}.cols-3{grid-template-columns:1fr}.cols-2{grid-template-columns:1fr}}
+  @media(max-width:560px){.cols-4{grid-template-columns:1fr}}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px}
+  .card h3{margin:6px 0 6px;font-size:19px}
+  .card p{margin:0;color:var(--inkSoft);font-size:15px}
+  .pill{display:inline-block;font-weight:600;font-size:13px;padding:5px 12px;border-radius:999px;background:rgba(12,92,76,.08);color:var(--teal);border:1px solid rgba(12,92,76,.2)}
+
+  .dark{background:var(--deep);color:#EAF3EF}
+  .dark .section-head h2{color:#F3F8F5}
+  .dark .muted{color:#9FC0B4}
+  .dark .card{background:#0C2A22;border-color:rgba(255,255,255,.08)}
+  .dark .card p{color:#9FC0B4}
+
+  /* code block */
+  .code{background:#07140F;border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden}
+  .code .bar{height:42px;background:#0C2219;display:flex;align-items:center;gap:8px;padding:0 16px;color:#7FA99B;font-family:"JetBrains Mono",monospace;font-size:13px;border-bottom:1px solid rgba(255,255,255,.06)}
+  .code pre{margin:0;padding:22px;font-family:"JetBrains Mono",monospace;font-size:14.5px;line-height:1.75;color:#D7E6DF;overflow-x:auto}
+
+  /* proven */
+  .stat-row{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px}
+  .stat{flex:1;min-width:180px;background:#0C2A22;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px}
+  .stat b{display:block;font-family:"JetBrains Mono",monospace;font-size:34px;color:#fff;letter-spacing:-1px}
+  .stat span{color:#9FC0B4;font-size:14px}
+
+  /* cta */
+  .ctaband{background:radial-gradient(120% 140% at 20% 0%,#0E4034,var(--deep));color:#EAF3EF;text-align:center;border-radius:24px;padding:60px 24px;margin:0 24px}
+  .ctaband h2{font-size:38px;margin:0 0 10px;letter-spacing:-.5px}
+  .ctaband p{color:#C7DCD3;margin:0 0 24px}
+
+  footer{background:var(--deep);color:#9FC0B4;padding:46px 0 40px;border-top:1px solid rgba(255,255,255,.07);font-size:14px}
+  footer a{color:#AFC9BE}footer a:hover{color:#fff}
+  .foot-top{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-start}
+  .foot-links{display:flex;gap:28px;flex-wrap:wrap}
+  .note{margin-top:26px;padding-top:22px;border-top:1px solid rgba(255,255,255,.08);font-size:12.5px;color:#7B988C;max-width:760px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#top"><img src="natlas-kit-logo.png" alt="natlas-kit logo" /><span>natlas-kit</span></a>
+      <div class="nav-links">
+        <a href="#gap">Why</a>
+        <a href="#features">Features</a>
+        <a href="#example">Example</a>
+        <a href="#proven">Proven</a>
+        <a class="btn btn-primary" href="https://github.com/nevodesigns/natlas-kit" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow" style="color:#7FD3B6">Open-source developer infrastructure</div>
+      <h1>The toolkit that makes<br/><span class="kit" style="color:#35D07F">N-ATLaS</span> easy to build with.</h1>
+      <p class="lead">natlas-kit is a Python &amp; TypeScript SDK and CLI for NCAIR's N-ATLaS language and speech models. Unified backends, reliable structured output, Nigerian-language tasks, speech-to-text and an eval harness, in the language you already use.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://github.com/nevodesigns/natlas-kit" target="_blank" rel="noopener">View on GitHub</a>
+        <a class="btn btn-ghost" href="#example">Quickstart</a>
+      </div>
+    </div>
+    <div class="hero-art">
+      <img src="natlas-kit-logo.png" alt="natlas-kit" />
+    </div>
+  </div>
+</section>
+
+<section id="gap" class="dark" style="padding-top:70px">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" style="color:#7FD3B6">The gap</div>
+      <h2>N-ATLaS is powerful. Building on it isn't.</h2>
+      <p class="muted" style="margin-top:12px">Every team re-solves the same four problems before writing a single line of their product. natlas-kit solves them once, for everyone.</p>
+    </div>
+    <div class="grid cols-4" style="margin-top:34px">
+      <div class="card"><div class="pill">1</div><h3>No hosted API</h3><p>You self-host. natlas-kit speaks TGI, vLLM/OpenAI-compatible and a mock backend out of the box.</p></div>
+      <div class="card"><div class="pill">2</div><h3>Tricky templating</h3><p>N-ATLaS uses a dated Llama-3 chat header that's easy to get wrong. natlas-kit builds it for you.</p></div>
+      <div class="card"><div class="pill">3</div><h3>No structured output</h3><p>Chat models don't reliably return JSON. <span class="mono">extract()</span> parses, repairs, validates and retries.</p></div>
+      <div class="card"><div class="pill">4</div><h3>Scattered ASR</h3><p>The speech models are separate repos. One <span class="mono">ASRClient</span> ties voice to the rest of the toolkit.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">What you get</div>
+      <h2>Everything you need to ship on N-ATLaS.</h2>
+    </div>
+    <div class="grid cols-3" style="margin-top:34px">
+      <div class="card"><h3>🔌 Unified backends</h3><p>One client for TGI (Hugging Face Inference Endpoints), vLLM / OpenAI-compatible servers, and an offline mock for tests and CI.</p></div>
+      <div class="card"><h3>🧩 Structured JSON</h3><p>Turn free text into validated JSON with a tiny schema. Parsing, repair, type-coercion and retry are handled for you.</p></div>
+      <div class="card"><h3>🗣️ Nigerian-language tasks</h3><p>Ready helpers for translate, detect-language, classify and summarize across English, Hausa, Igbo, Yoruba and Pidgin.</p></div>
+      <div class="card"><h3>🎙️ Speech-to-text</h3><p>An ASR client for the N-ATLaS speech models, so voice-first apps go from microphone to structured data in one toolkit.</p></div>
+      <div class="card"><h3>📊 Eval harness</h3><p>Measure your integration on the real model, prove it works and catch regressions in CI with <span class="mono">natlas eval</span>.</p></div>
+      <div class="card"><h3>🐍 Python &amp; TypeScript</h3><p>The same API in both ecosystems, so web, React Native and ML teams can all build on N-ATLaS without leaving their stack.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="example" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" style="color:#7FD3B6">Quickstart</div>
+      <h2>Three lines to your first call.</h2>
+    </div>
+    <div class="grid cols-2" style="margin-top:30px;align-items:start">
+      <div class="code">
+        <div class="bar">python</div>
+<pre><span class="c-out"># pip install natlas-kit</span>
+<span class="c-key">from</span> natlaskit <span class="c-key">import</span> NatlasClient, extract
+
+nat = NatlasClient.from_env()   <span class="c-out"># any N-ATLaS endpoint</span>
+nat.ask(<span class="c-str">"Translate 'good morning' into Yoruba"</span>)
+<span class="c-out"># -> "Ẹ kaaro"</span>
+
+extract(nat, <span class="c-str">"Sold 2 brake pads for 15k to Musa on credit"</span>, {
+  <span class="c-str">"item"</span>:   {<span class="c-str">"type"</span>: <span class="c-str">"string"</span>, <span class="c-str">"required"</span>: True},
+  <span class="c-str">"amount"</span>: {<span class="c-str">"type"</span>: <span class="c-str">"number"</span>, <span class="c-str">"required"</span>: True},
+  <span class="c-str">"on_credit"</span>: {<span class="c-str">"type"</span>: <span class="c-str">"boolean"</span>, <span class="c-str">"default"</span>: False},
+})
+<span class="c-out"># -> {"item":"brake pads","amount":15000,"on_credit":true}</span></pre>
+      </div>
+      <div class="code">
+        <div class="bar">typescript</div>
+<pre><span class="c-out">// npm install natlas-kit</span>
+<span class="c-key">import</span> { NatlasClient, extract } <span class="c-key">from</span> <span class="c-str">"natlas-kit"</span>;
+
+<span class="c-key">const</span> nat = NatlasClient.fromEnv();
+
+<span class="c-key">await</span> nat.ask(<span class="c-str">"Translate 'good morning' into Hausa"</span>);
+
+<span class="c-key">await</span> extract(nat, <span class="c-str">"Paid 6k for fuel today"</span>, {
+  category: { type: <span class="c-str">"string"</span>, required: <span class="c-key">true</span> },
+  amount:   { type: <span class="c-str">"number"</span>, required: <span class="c-key">true</span> },
+});
+<span class="c-out">// -> { category: "fuel", amount: 6000 }</span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="proven">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Proven on real N-ATLaS</div>
+      <h2>Measured on the live model. Powering a real product.</h2>
+      <p class="muted" style="margin-top:12px">natlas-kit was built to add Nigerian-language AI to <a href="https://egotrack-app.vercel.app" target="_blank" rel="noopener" style="color:var(--teal2);font-weight:600">EgoTrack</a>, a ledger for market traders, then open-sourced for every N-ATLaS builder.</p>
+    </div>
+    <div class="grid cols-2" style="margin-top:30px;align-items:center">
+      <div class="stat-row" style="flex-direction:column">
+        <div class="stat"><b>5 / 7</b><span>eval cases passing on a live N-ATLaS endpoint — real results, not cherry-picked.</span></div>
+        <div class="stat"><b>~384 ms</b><span>average latency per call on a single GPU.</span></div>
+        <div class="stat"><b>EN · HA · IG · YO · Pidgin</b><span>the languages real Nigerian users actually speak.</span></div>
+      </div>
+      <div class="code">
+        <div class="bar">natlas-kit — EgoTrack voice-to-ledger</div>
+<pre><span class="c-cmd">$</span> python examples/egotrack_voice_to_ledger.py
+
+<span class="c-out">Heard (spoken in Pidgin):</span>
+  I sell one alternator for sixty-eight thousand
+  give Emeka Motors, dem pay fifty, remaining go be credit.
+
+<span class="c-out">Ledger entry:</span>
+{ <span class="c-str">"kind"</span>:<span class="c-str">"income"</span>, <span class="c-str">"item"</span>:<span class="c-str">"alternator"</span>,
+  <span class="c-str">"amount"</span>:68000, <span class="c-str">"amount_paid"</span>:50000,
+  <span class="c-str">"counterparty"</span>:<span class="c-str">"Emeka Motors"</span>, <span class="c-str">"on_credit"</span>:true }
+
+<span style="color:#E3A63C">→ Also opens a debt of ₦18,000 for Emeka Motors.</span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:30px 0 90px">
+  <div class="wrap">
+    <div class="ctaband">
+      <h2>Build with N-ATLaS today.</h2>
+      <p>Open source under MIT. Python and TypeScript. One <span class="mono">pip install</span> away.</p>
+      <a class="btn btn-primary" href="https://github.com/nevodesigns/natlas-kit" target="_blank" rel="noopener">Get it on GitHub ↗</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <a class="brand" href="#top"><img src="natlas-kit-logo.png" alt="" style="width:30px;height:30px" /><span>natlas-kit</span></a>
+      <div class="foot-links">
+        <a href="https://github.com/nevodesigns/natlas-kit" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://huggingface.co/NCAIR1/N-ATLaS" target="_blank" rel="noopener">N-ATLaS model</a>
+        <a href="https://egotrack-app.vercel.app" target="_blank" rel="noopener">EgoTrack</a>
+      </div>
+    </div>
+    <p class="note">
+      natlas-kit is an independent, community-built toolkit and is not affiliated with or endorsed by NCAIR, NITDA or Awarri Technologies.
+      The N-ATLaS models are the work of Awarri Technologies and the National Centre for Artificial Intelligence and Robotics (NCAIR),
+      an agency under the Federal Ministry of Communications, Innovation and Digital Economy. natlas-kit is MIT-licensed.
+      Built for the National AI Innovation Challenge (NAIC) 2026 · Developer Infrastructure.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
