@@ -220,8 +220,8 @@ extract(nat, <span class="c-str">"Sold 2 brake pads for 15k to Musa on credit"</
   <div class="wrap">
     <div class="section-head">
       <div class="eyebrow">Proven on real N-ATLaS</div>
-      <h2>Measured on the live model. Powering a real product.</h2>
-      <p class="muted" style="margin-top:12px">natlas-kit was built to add Nigerian-language AI to <a href="https://egotrack-app.vercel.app" target="_blank" rel="noopener" style="color:var(--teal2);font-weight:600">EgoTrack</a>, a ledger for market traders, then open-sourced for every N-ATLaS builder.</p>
+      <h2>Measured on the live model. Ready for real applications.</h2>
+      <p class="muted" style="margin-top:12px">natlas-kit has been tested on the live N-ATLaS model in a Nigerian-language voice-to-structured-data workflow, then open-sourced for every N-ATLaS builder.</p>
     </div>
     <div class="grid cols-2" style="margin-top:30px;align-items:center">
       <div class="stat-row" style="flex-direction:column">
@@ -230,19 +230,13 @@ extract(nat, <span class="c-str">"Sold 2 brake pads for 15k to Musa on credit"</
         <div class="stat"><b>EN · HA · IG · YO · Pidgin</b><span>the languages real Nigerian users actually speak.</span></div>
       </div>
       <div class="code">
-        <div class="bar">natlas-kit — EgoTrack voice-to-ledger</div>
-<pre><span class="c-cmd">$</span> python examples/egotrack_voice_to_ledger.py
+        <div class="bar">natlas-kit: voice-to-structured-data example</div>
+<pre><span class="c-cmd">$</span> natlas extract "Sold 2 tyres for 30k to Musa on credit" --schema examples/sale.json
 
-<span class="c-out">Heard (spoken in Pidgin):</span>
-  I sell one alternator for sixty-eight thousand
-  give Emeka Motors, dem pay fifty, remaining go be credit.
-
-<span class="c-out">Ledger entry:</span>
-{ <span class="c-str">"kind"</span>:<span class="c-str">"income"</span>, <span class="c-str">"item"</span>:<span class="c-str">"alternator"</span>,
-  <span class="c-str">"amount"</span>:68000, <span class="c-str">"amount_paid"</span>:50000,
-  <span class="c-str">"counterparty"</span>:<span class="c-str">"Emeka Motors"</span>, <span class="c-str">"on_credit"</span>:true }
-
-<span style="color:#E3A63C">→ Also opens a debt of ₦18,000 for Emeka Motors.</span></pre>
+<span class="c-out">Structured output:</span>
+{ <span class="c-str">"kind"</span>:<span class="c-str">"income"</span>, <span class="c-str">"item"</span>:<span class="c-str">"tyres"</span>,
+  <span class="c-str">"quantity"</span>:2, <span class="c-str">"amount"</span>:30000,
+  <span class="c-str">"counterparty"</span>:<span class="c-str">"Musa"</span>, <span class="c-str">"on_credit"</span>:true }</pre>
       </div>
     </div>
   </div>
@@ -265,7 +259,6 @@ extract(nat, <span class="c-str">"Sold 2 brake pads for 15k to Musa on credit"</
       <div class="foot-links">
         <a href="https://github.com/nevodesigns/natlas-kit" target="_blank" rel="noopener">GitHub</a>
         <a href="https://huggingface.co/NCAIR1/N-ATLaS" target="_blank" rel="noopener">N-ATLaS model</a>
-        <a href="https://egotrack-app.vercel.app" target="_blank" rel="noopener">EgoTrack</a>
       </div>
     </div>
     <p class="note">
