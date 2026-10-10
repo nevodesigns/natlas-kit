@@ -183,7 +183,7 @@
     <div class="grid cols-2" style="margin-top:30px;align-items:start">
       <div class="code">
         <div class="bar">python</div>
-<pre><span class="c-out"># pip install natlas-kit</span>
+<pre><span class="c-out"># pip install git+https://github.com/nevodesigns/natlas-kit.git</span>
 <span class="c-key">from</span> natlaskit <span class="c-key">import</span> NatlasClient, extract
 
 nat = NatlasClient.from_env()   <span class="c-out"># any N-ATLaS endpoint</span>
@@ -199,7 +199,7 @@ extract(nat, <span class="c-str">"Sold 2 brake pads for 15k to Musa on credit"</
       </div>
       <div class="code">
         <div class="bar">typescript</div>
-<pre><span class="c-out">// npm install natlas-kit</span>
+<pre><span class="c-out">// git clone + npm install (not yet on npm)</span>
 <span class="c-key">import</span> { NatlasClient, extract } <span class="c-key">from</span> <span class="c-str">"natlas-kit"</span>;
 
 <span class="c-key">const</span> nat = NatlasClient.fromEnv();
