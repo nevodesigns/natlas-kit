@@ -34,14 +34,16 @@ feature, in the language you already use.
 
 ## Install
 
+Not yet on PyPI, so install straight from GitHub for now:
+
 ```bash
-pip install natlas-kit          # from PyPI once published
-# or, from source:
-pip install .
+pip install git+https://github.com/nevodesigns/natlas-kit.git
+# or, from a local clone:
+git clone https://github.com/nevodesigns/natlas-kit.git && cd natlas-kit && pip install -e .
 ```
 
-Core install needs only `requests`. Optional extras: `pip install natlas-kit[hf]` (Hugging
-Face client), `[dev]` (tests).
+Core install needs only `requests`. Optional extras: `pip install "natlas-kit[hf] @ git+https://github.com/nevodesigns/natlas-kit.git"`
+(Hugging Face client), `[dev]` (tests, from a local clone: `pip install -e .[dev]`).
 
 ## Quickstart
 

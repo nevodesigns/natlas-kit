@@ -15,6 +15,7 @@ import sys
 from . import __version__
 from .asr import ASRClient
 from .client import NatlasClient
+from .errors import NatlasError
 from .eval import load_suite, run_suite, to_markdown
 from .extract import extract
 
@@ -65,20 +66,48 @@ def main(argv=None) -> int:
         return 0 if ok else 1
 
     if args.cmd == "ask":
+        if not args.prompt.strip():
+            print("Error: prompt cannot be empty.", file=sys.stderr)
+            return 1
         extra = {"max_new_tokens": args.max_new_tokens} if args.max_new_tokens else {}
-        print(_client(args).ask(args.prompt, system=args.system, **extra))
+        try:
+            print(_client(args).ask(args.prompt, system=args.system, **extra))
+        except NatlasError as e:
+            print(f"Error: {e}", file=sys.stderr)
+            return 1
         return 0
 
     if args.cmd == "extract":
-        with open(args.schema, encoding="utf-8") as f:
-            schema = json.load(f)
-        result = extract(_client(args), args.text, schema)
+        if not args.text.strip():
+            print("Error: text cannot be empty.", file=sys.stderr)
+            return 1
+        try:
+            with open(args.schema, encoding="utf-8") as f:
+                schema = json.load(f)
+        except FileNotFoundError:
+            print(f"Error: schema file not found: {args.schema}", file=sys.stderr)
+            return 1
+        except json.JSONDecodeError as e:
+            print(f"Error: schema file {args.schema} is not valid JSON: {e}", file=sys.stderr)
+            return 1
+        try:
+            result = extract(_client(args), args.text, schema)
+        except NatlasError as e:
+            print(f"Error: {e}", file=sys.stderr)
+            return 1
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0
 
     if args.cmd == "transcribe":
         asr = ASRClient(endpoint=args.asr_endpoint, token=args.asr_token)
-        print(asr.transcribe_file(args.audio))
+        try:
+            print(asr.transcribe_file(args.audio))
+        except FileNotFoundError:
+            print(f"Error: audio file not found: {args.audio}", file=sys.stderr)
+            return 1
+        except NatlasError as e:
+            print(f"Error: {e}", file=sys.stderr)
+            return 1
         return 0
 
     if args.cmd == "eval":

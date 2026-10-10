@@ -4,8 +4,17 @@ The JS/TS half of [natlas-kit](../README.md) — the same N-ATLaS developer tool
 language most Nigerian app and web developers actually build in. Works in Node 18+ and the
 browser, zero runtime dependencies (uses the built-in `fetch`).
 
+Not yet on npm, so for now, clone and build it locally:
+
 ```bash
-npm install natlas-kit
+git clone https://github.com/nevodesigns/natlas-kit.git
+cd natlas-kit/js
+npm install && npm run build
+```
+
+Then import it with a relative or `file:` path, e.g. from your project:
+```bash
+npm install file:../natlas-kit/js
 ```
 
 ```ts

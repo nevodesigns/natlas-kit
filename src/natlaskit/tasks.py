@@ -25,12 +25,20 @@ def detect_language(client, text: str, **params) -> str:
 
 
 def classify(client, text: str, labels: List[str], **params) -> str:
+    """Classify `text` into one of `labels`. Returns the raw model text unchanged
+    if nothing matches (callers that need a hard guarantee should check the
+    result is `in labels` themselves)."""
     sys = ("You are a classifier. Reply with exactly one label from the list and nothing else.\n"
            "Labels: " + ", ".join(labels))
     out = client.chat([Message("system", sys), Message("user", text)],
                       max_new_tokens=16, **params).text.strip()
     low = out.lower()
-    for lab in labels:                       # snap to the closest provided label
+    for lab in labels:                       # 1) exact match first
+        if lab.strip().lower() == low:
+            return lab
+    # 2) longest labels first, so a short label (e.g. "in") can't win just
+    #    because it happens to be a substring of a longer one (e.g. "income").
+    for lab in sorted(labels, key=len, reverse=True):
         if lab.lower() in low:
             return lab
     return out

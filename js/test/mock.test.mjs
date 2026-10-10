@@ -57,3 +57,49 @@ test("classify snaps to a provided label", async () => {
   const nat = new NatlasClient({ backend: new MockBackend("This looks like an EXPENSE to me") });
   assert.equal(await classify(nat, "bought fuel", ["income", "expense"]), "expense");
 });
+
+// --- regression tests for issues found during external beta testing ---
+
+test("extract handles a brace inside a string value", async () => {
+  const nat = new NatlasClient({
+    backend: new MockBackend('{"note":"closing brace } inside text","amount":1200}'),
+  });
+  const got = await extract(nat, "x", {
+    note: { type: "string", required: true },
+    amount: { type: "number", required: true },
+  });
+  assert.deepEqual(got, { note: "closing brace } inside text", amount: 1200 });
+});
+
+test("extract preserves an apostrophe during quote repair", async () => {
+  const nat = new NatlasClient({ backend: new MockBackend(`{'name': "O'Connor", 'amount': 15000}`) });
+  const got = await extract(nat, "x", {
+    name: { type: "string", required: true },
+    amount: { type: "number", required: true },
+  });
+  assert.equal(got.name, "O'Connor");
+  assert.equal(got.amount, 15000);
+});
+
+test("extract rejects a boolean in a numeric field", async () => {
+  const nat = new NatlasClient({ backend: new MockBackend(['{"amount": true}', '{"amount": 500}']) });
+  const got = await extract(nat, "x", { amount: { type: "number", required: true } });
+  assert.equal(got.amount, 500);
+});
+
+test("extract truncates a fractional string in an integer field", async () => {
+  const nat = new NatlasClient({ backend: new MockBackend('{"quantity": "3.5"}') });
+  const got = await extract(nat, "x", { quantity: { type: "integer", required: true } });
+  assert.equal(got.quantity, 3);
+});
+
+test("extract truncates a fractional number in an integer field", async () => {
+  const nat = new NatlasClient({ backend: new MockBackend('{"quantity": 3.5}') });
+  const got = await extract(nat, "x", { quantity: { type: "integer", required: true } });
+  assert.equal(got.quantity, 3);
+});
+
+test("classify prefers an exact match over a shorter substring label", async () => {
+  const nat = new NatlasClient({ backend: new MockBackend("income") });
+  assert.equal(await classify(nat, "salary received", ["in", "income"]), "income");
+});

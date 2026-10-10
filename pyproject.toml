@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "natlas-kit"
-version = "0.1.0"
+version = "0.1.1"
 description = "A community developer toolkit that makes NCAIR's N-ATLaS language and speech models easy to build with."
 readme = "README.md"
 requires-python = ">=3.8"

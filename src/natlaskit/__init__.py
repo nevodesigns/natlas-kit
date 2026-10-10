@@ -15,7 +15,7 @@ from .tasks import translate, detect_language, classify, summarize
 from .asr import ASRClient
 from .errors import NatlasError, BackendError, SchemaError
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "NatlasClient", "GenerationConfig", "Message", "ChatResult",

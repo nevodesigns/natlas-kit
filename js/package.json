@@ -1,6 +1,6 @@
 {
   "name": "natlas-kit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Developer toolkit for NCAIR's N-ATLaS models — TypeScript/JavaScript client (Node + browser).",
   "type": "module",
   "main": "dist/index.js",

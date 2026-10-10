@@ -70,3 +70,56 @@ def test_eval_suite_runs():
     cases = [{"name": "cap", "kind": "chat", "input": "Capital?", "contains": ["Lagos"]}]
     report = run_suite(nat, cases)
     assert report["passed"] == 1 and report["pass_rate"] == 1.0
+
+
+# --- regression tests for issues found during external beta testing ---
+
+def test_extract_brace_inside_string_value():
+    # beta finding: a } inside a quoted string broke the balanced-brace scanner
+    payload = '{"note":"closing brace } inside text","amount":1200}'
+    nat = NatlasClient(backend=MockBackend(payload))
+    schema = {"note": {"type": "string", "required": True}, "amount": {"type": "number", "required": True}}
+    got = extract(nat, "x", schema)
+    assert got == {"note": "closing brace } inside text", "amount": 1200}
+
+
+def test_extract_apostrophe_preserved_during_quote_repair():
+    # beta finding: blind ' -> " replacement corrupted "O'Connor" to "O"Connor"
+    messy = """{'name': "O'Connor", 'amount': 15000}"""
+    nat = NatlasClient(backend=MockBackend(messy))
+    schema = {"name": {"type": "string", "required": True}, "amount": {"type": "number", "required": True}}
+    got = extract(nat, "x", schema)
+    assert got["name"] == "O'Connor"
+    assert got["amount"] == 15000
+
+
+def test_extract_rejects_boolean_as_number():
+    # beta finding: Python's bool-is-a-subclass-of-int let {"amount": true} pass as numeric
+    nat = NatlasClient(backend=MockBackend(['{"amount": true}', '{"amount": 500}']))
+    schema = {"amount": {"type": "number", "required": True}}
+    got = extract(nat, "x", schema)  # first reply rejected, retry succeeds
+    assert got["amount"] == 500
+
+
+def test_extract_integer_truncates_consistently():
+    # beta finding: fractional values in an integer field behaved inconsistently
+    nat = NatlasClient(backend=MockBackend('{"quantity": "3.5"}'))
+    schema = {"quantity": {"type": "integer", "required": True}}
+    got = extract(nat, "x", schema)
+    assert got["quantity"] == 3  # truncation toward zero, not rounding
+
+
+def test_extract_recovers_from_malformed_json_on_retry():
+    # beta finding: an unquoted value (invalid JSON even after repair) crashed
+    # extract() instead of being caught and retried
+    nat = NatlasClient(backend=MockBackend(["{\"item\": oil}", '{"item":"oil"}']))
+    schema = {"item": {"type": "string", "required": True}}
+    got = extract(nat, "x", schema)
+    assert got["item"] == "oil"
+
+
+def test_classify_exact_match_beats_substring_overlap():
+    # beta finding: labels=["in","income"] on reply "income" returned "in",
+    # because "in" is literally a substring of "income"
+    nat = NatlasClient(backend=MockBackend("income"))
+    assert classify(nat, "salary received", ["in", "income"]) == "income"
